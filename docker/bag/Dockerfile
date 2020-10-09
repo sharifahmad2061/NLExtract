@@ -13,7 +13,11 @@ RUN sed -i '11,13 s/^# //' ~/.bashrc
 RUN apt-get update
 
 # Install GDAL development libraries
-RUN apt-get install -y libgdal-dev
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+RUN apt-get install -y libgdal-dev 
+RUN apt-get install -y gdal-bin
+RUN apt-get install -y python-gdal
 ENV CPLUS_INCLUDE_PATH /usr/include/gdal
 ENV C_INCLUDE_PATH /usr/include/gdal
 
@@ -30,6 +34,9 @@ RUN cp /init/nginx.conf /etc/nginx/nginx.conf
 RUN chmod +x /init/pip-install.sh
 RUN /init/pip-install.sh
 
+RUN pip install numpy
+RUN pip install GDAL==$(gdal-config --version) --global-option=build_ext --global-option="-I/usr/include/gdal"
+
 # Add BAG-extract, using Git
 RUN chmod +x /init/get-bagextract.sh
 RUN /init/get-bagextract.sh
@@ -44,7 +51,8 @@ COPY config/extract.conf /opt/nlextract/bag/extract.conf
 EXPOSE 80
 
 # Add a volume to exchange data
-VOLUME /data
+# VOLUME /data
+WORKDIR /usr/src/app
 
 # Start all processes
 COPY init.sh /

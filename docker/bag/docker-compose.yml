@@ -1,0 +1,19 @@
+version: '2'
+services:
+    app:
+        build: .
+        volumes: 
+            - /home/sharif/Documents/bagdata:/data
+        ports: 
+            - "24000:5000"
+        links: 
+            - db
+    db:
+        image: "postgis/postgis:12-master"
+        environment: 
+            POSTGRES_PASSWORD: hunter2
+            POSTGRES_DB: bagtest
+        expose:
+            - "5432"
+        ports:
+            - "9432:5432"
