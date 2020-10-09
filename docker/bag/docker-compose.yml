@@ -3,7 +3,7 @@ services:
     app:
         build: .
         volumes: 
-            - /home/sharif/Documents/bagdata:/data
+            - /home/$USER/Documents/bagdata:/data
         ports: 
             - "24000:5000"
         links: 
